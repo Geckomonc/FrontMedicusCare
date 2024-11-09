@@ -1,0 +1,123 @@
+
+.register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #007ba7;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .register-container {
+    background-color: #f2f2f2;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    width: 600px;
+    text-align: center;
+  }
+  
+  .register h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .register label {
+    display: block;
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 1rem;
+    text-align: left;
+  }
+
+  .formulario-registro select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+
+  .register input[type="email"],
+  .register input[type="password"],
+  .register input[type="text"],
+  .register input[type="tel"],
+  .register input[type="number"]{
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  
+  .register-button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .register-button[type="submit"] {
+    background-color: #28a745; /* Verde */
+    color: white;
+    margin-top: 1rem;
+  }
+  
+  /*button.crear-cuenta {
+    background-color: #17a2b8;
+    color: white;
+    margin-top: 0.5rem;
+  }
+  
+  button:hover {
+    opacity: 0.9;
+  }*/
+  
+  .formulario-registro {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-row {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .form-col {
+    width: 48%; /* Para que cada columna ocupe casi la mitad del espacio */
+  }
+  
+  .register-button,
+  .login-button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+  
+  .login-button {
+    background-color: #28a745; /* Verde */
+    color: white;
+  }
+  
+  .register-button {
+    background-color: #17a2b8; /* Azul */
+    color: white;
+    margin-top: 0.5rem;
+  }
+  
+  button:hover {
+    opacity: 0.9;
+  }
+  

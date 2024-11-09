@@ -1,0 +1,111 @@
+.pagina-principal {
+    display: flex;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+  
+  .options {
+    display: flex;
+    flex-direction: column;
+    margin-top: 100px;
+    gap: 20px;
+  }
+
+  .information {
+    margin-top: 10px;
+  }
+
+  .information p {
+    color: #f2f7f8;
+  }
+
+  .sidebar {
+    width: 250px;
+    background-color: #0378A6;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .sidebar nav a {
+    display: block;
+    padding: 10px 0;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .header h1 {
+    color: rgb(17, 14, 14);
+    font-size: 1.5rem;
+  }
+
+  .sidebar nav a:hover {
+    background-color: #499EBF;
+    padding-left: 10px;
+    transition: padding 0.2s;
+    border-radius: 10px;
+  }
+  
+  .logout {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 10px 0;
+    font-size: 1.1rem;
+  }
+  
+  .logout:hover {
+    background-color: #499EBF;
+    transition: padding 0.2s;
+    border-radius: 10px;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background-color: #f4f4f4;
+  }
+  
+  .header {
+    background-color: #A7E4F2;
+    height: 10vh;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header h1 {
+    margin: 0;
+  }
+  
+  .header p {
+    font-size: 1rem;
+    color: gray;
+  }
+  
+  .user-info {
+    display: flex;
+    text-align: right;
+    color: #1a1f1f;
+    margin: 10px;
+    align-items: center; /* Para alinear los elementos verticalmente */
+    gap: 15px; /* Ajusta el valor para el espacio deseado entre los elementos */
+  }
+
+  .user-info svg {
+    color: #0367A6;
+    margin: 1px;
+    font-size: 30px;
+  }
+
+  .main-content {
+    padding: 20px;
+    background-color: #e4e4e4;
+    flex-grow: 1;
+  }
+  

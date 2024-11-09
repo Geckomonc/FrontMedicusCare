@@ -1,0 +1,231 @@
+.medicamentos {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    font-family: Calibri, Arial, sans-serif;
+  }
+
+  .content-med{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background-color: #f4f4f4;
+  }
+
+  .header-med {
+    background-color: #499EBF;
+    height: 10vh;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header-med h1{
+    font-size: 1.5rem;
+    color: #f4f4f4;
+  }
+
+  .button-option button {
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    justify-content: center;
+    background-color: #e3e9ec;
+    height: 50px;
+    width: 180px;
+    margin-left: 30px;
+    color: #00436d;
+    text-decoration: none;
+    font-size: 15px;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  }
+
+  .button-option button:hover {
+    background-color: #d5e2e6;
+    color: rgb(7, 7, 7);
+    cursor: pointer;
+    transition: 0.3s ease-in;
+  }
+
+  .content-add {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+  }
+
+  .content-register {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+  }
+
+  .content-table {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+  }
+
+  .medication-register {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Divide en tres columnas */
+    gap: 20px; /* Espacio entre columnas */
+    max-width: 500px; /* Ajusta el ancho del formulario */
+    background-color: #e5e5e6;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .medication-register div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .medication-register label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .medication-register input,
+  .medication-register select,
+  .medication-register textarea {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .medication-register button {
+    /* grid-column: span 3;  Hace que el botón ocupe toda la fila */
+    margin-top: 10px;
+    width: 140px;
+    height: 50px;
+    background-color: #499EBF;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .medication-register button:hover {
+    background-color: #3b82a0;
+  }
+  
+  .medication-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Divide en tres columnas */
+    gap: 20px; /* Espacio entre columnas */
+    max-width: 900px; /* Ajusta el ancho del formulario */
+    background-color: #e5e5e6;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .medication-form div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .medication-form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .medication-form input,
+  .medication-form select,
+  .medication-form textarea {
+    padding: 5px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .medication-form button {
+    /* grid-column: span 3;  Hace que el botón ocupe toda la fila */
+    margin-top: 10px;
+    width: 140px;
+    height: 50px;
+    background-color: #499EBF;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .medication-form button:hover {
+    background-color: #3b82a0;
+  }
+
+  .medication-table {
+    max-width: 1200px; /* Ajusta el ancho del formulario */
+    background-color: #e5e5e6;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .medication-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    border-radius: 8px;
+  }
+
+.medication-table th, .medication-table td {
+    padding: 10px;
+    text-align: left;
+}
+
+.medication-table th {
+    background-color: #499EBF;
+    font-weight: bold;
+    color: #f3eded;   
+}
+
+.medication-table tbody tr td {
+    background-color: #fff;
+}
+
+.medication-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+
+.medication-table2 {
+  max-width: 1200px; /* Ajusta el ancho del formulario */
+  background-color: #e5e5e6;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.medication-table2 table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  border-radius: 8px;
+}
+
+.medication-table2 th, .medication-table2 td {
+  padding: 10px;
+  text-align: left;
+}
+
+.medication-table2 th {
+  background-color: #499EBF;
+  font-weight: bold;
+  color: #f3eded;   
+}
+
+.medication-table2 tbody tr td {
+  background-color: #fff;
+}
+
+.medication-table2 tbody tr:hover {
+  background-color: #f1f1f1;
+}

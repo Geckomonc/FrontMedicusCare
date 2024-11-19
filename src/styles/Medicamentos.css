@@ -229,3 +229,115 @@
 .medication-table2 tbody tr:hover {
   background-color: #f1f1f1;
 }
+
+/* Estos serán los estilos de mi botón editar medicamentos inicio */
+
+.medication-edit {
+  display: grid;
+  gap: 20px; /* Espacio entre columnas */
+  max-width: 900px; /* Ajusta el ancho del formulario */
+  background-color: #e5e5e6;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.medication-edit div {
+  display: grid;
+  justify-content: center;
+}
+
+.medication-edit label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.medication-edit input,
+.medication-edit select,
+.medication-edit textarea {
+  padding: 5px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.medication-edit button {
+  margin-top: 10px;
+  width: 140px;
+  height: 50px;
+  background-color: #499EBF;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.medication-edit button:hover {
+  background-color: #3b82a0;
+}
+
+/* Estos serán los estilos de mi botón editar medicamentos fin */
+
+/* Estos serán los estilos de mi botón eliminar medicamentos inicio */
+
+.content-table2 {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.content-delete {
+  display: grid;
+  gap: 20px; /* Espacio entre columnas */
+  max-width: 900px; /* Ajusta el ancho del formulario */
+  background-color: #e5e5e6;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.content-delete div {
+  display: grid;
+  justify-content: center;
+}
+
+.content-delete label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.content-delete input,
+.content-delete select,
+.content-delete textarea {
+  padding: 5px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.content-delete button {
+  margin-top: 10px;
+  width: 140px;
+  height: 50px;
+  background-color: #499EBF;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.content-delete button:hover {
+  background-color: #3b82a0;
+}
+
+.delete-table .delete-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+}
+
+.content-delete .delete-form {
+  justify-items: center;
+}

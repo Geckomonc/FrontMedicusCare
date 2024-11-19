@@ -1,19 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/Login.css";
-import { Link } from "react-router-dom";
+import {signIn} from "../request/request";
+import { Link, useNavigate} from "react-router-dom";
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const user = { email, password };
+      const response = await signIn(user);
+      console.log(response);
+      if (response.email) {
+        // Guarda el token en localStorage o cookies
+        localStorage.setItem("token", response.email);
+        // Redirige a la página principal
+        navigate("/pagina-principal");
+      } else {
+
+        alert(response);
+      }
+    } catch (error) {
+      console.error("Error en el inicio de sesión:", error);
+      alert("Ocurrió un error en el inicio de sesión.");
+    }
+  };
+
   return (
     <div className="login">
       <div className="login-container">
         <h2>Inicio de sesión</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <label htmlFor="email">Email</label>
           <input
             type="email"
             id="email"
             name="email"
             placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           
           <label htmlFor="password">Password</label>
@@ -22,10 +50,10 @@ function Login() {
             id="password"
             name="password"
             placeholder="********"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
-          <Link to="/pagina-principal">
-            <button type="submit" className="login-button">Iniciar sesión</button>
-          </Link>
+          <button type="submit" className="login-button">Iniciar sesión</button>
           <Link to="/register">
             <button type="button" className="register-button">Crear cuenta</button>
           </Link>

@@ -37,7 +37,7 @@
   }
   
   .header h1 {
-    color: rgb(17, 14, 14);
+    color: rgb(255, 255, 255);
     font-size: 1.5rem;
   }
 
@@ -58,7 +58,7 @@
   }
   
   .logout:hover {
-    background-color: #499EBF;
+    background-color: #A7E4F2;
     transition: padding 0.2s;
     border-radius: 10px;
   }
@@ -71,7 +71,7 @@
   }
   
   .header {
-    background-color: #A7E4F2;
+    background-color: #499EBF;
     height: 10vh;
     padding: 10px 20px;
     display: flex;
@@ -91,7 +91,7 @@
   .user-info {
     display: flex;
     text-align: right;
-    color: #1a1f1f;
+    color: #ffffff;
     margin: 10px;
     align-items: center; /* Para alinear los elementos verticalmente */
     gap: 15px; /* Ajusta el valor para el espacio deseado entre los elementos */

@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import signUp from "../request/request";
 import "../styles/Register.css";
 
 function Register() {
     const [formData, setFormData] = useState({
         email: '',
-        nombre: '',
-        esPaciente: '',
-        celular: '',
+        name: '',
+        isPatient: '',
+        phoneNumber: '',
         password: '',
         confirmPassword: '',
-        nacimiento: '',
+        dateOfBirth: '',
       });
     
       const [errors, setErrors] = useState({
@@ -29,51 +30,55 @@ function Register() {
         }
       };
     
-      const handleSubmit = (e) => {
+      const handleSubmit = async (e) => {
         e.preventDefault();
         if (formData.password !== formData.confirmPassword) {
-          alert("Las contraseñas no coinciden");
-          return;
+            alert("Las contraseñas no coinciden");
+            return;
         }
-        // Aquí puedes manejar el envío del formulario
-        console.log("Formulario enviado:", formData);
-      };
+        try {
+            const response = await signUp(formData);
+            console.log("Formulario enviado:", response);
+        } catch (error) {
+            console.error("Error al enviar el formulario:", error);
+        }
+    };
 
   return (
     <div className="register">
       <div className="register-container">
         <h2>Registrarse</h2>
-        <form className="formulario-registro">
+        <form className="formulario-registro" onSubmit={handleSubmit}>
             <div className="form-row">
                 <div className="form-col">
-                <label htmlFor="nombre">Nombre</label>
-                <input type="text" id="nombre" name="nombre" placeholder="Nombre" onChange={handleChange} value={formData.nombre} />
+                <label htmlFor="name">name</label>
+                <input type="text" id="name" name="name" placeholder="name" onChange={handleChange} value={formData.name} />
                 </div>
                 <div className="form-col">
                 <label htmlFor="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="you@example.com" onChange={handleChange} value={formData.email} />
+                <input type="text" id="email" name="email" placeholder="you@example.com" onChange={handleChange} value={formData.email} />
                 </div>
             </div>
             
             <div className="form-row">
                 <div className="form-col">
                 <label>¿Es un paciente?</label>
-                <select name="pacienteTipo" required>
+                <select name="isPatient" onChange={handleChange} value={formData.isPatient} required>
                     <option value="">Selecciona Si o No</option>
                     <option value="true">Si</option>
                     <option value="false">No</option>
                 </select>
                 </div>
                 <div className="form-col">
-                <label htmlFor="celular">Número de celular</label>
-                <input type="tel" id="celular" name="celular" placeholder="1234567890" onChange={handleChange} value={formData.celular} />
+                <label htmlFor="phoneNumber">Número de phoneNumber</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="1234567890" onChange={handleChange} value={formData.phoneNumber} />
                 </div>
             </div>
 
             <div className="form-row">
                 <div className="form-col">
-                <label htmlFor="nacimiento">Año de Nacimiento</label>
-                <input type="number" id="nacimiento" name="nacimiento" placeholder="1990" onChange={handleChange} value={formData.nacimiento} />
+                <label htmlFor="dateOfBirth">Año de dateOfBirth</label>
+                <input type="date" id="dateOfBirth" name="dateOfBirth" placeholder="1990" onChange={handleChange} value={formData.dateOfBirth} />
                 </div>
                 <div className="form-col">
                 <label htmlFor="password">Contraseña</label>
@@ -89,8 +94,8 @@ function Register() {
                 </div>
             </div>
             
-            <Link to="/login"><button type="submit" className="login-button">Iniciar sesión</button></Link>
-            <button type="button" className="register-button">Crear cuenta</button>
+            <Link to="/login"><button type="button" className="login-button">Iniciar sesión</button></Link>
+            <button type="submit" className="register-button">Crear cuenta</button>
         </form>
       </div>
     </div>

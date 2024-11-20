@@ -69,9 +69,6 @@ function Notificaciones() {
           <h1>Notificaciones</h1>
           <div className='button-option'>
             <button onClick={handleAddNotification}>Agregar notificación</button>
-            <button>Mostrar notificación</button>
-            <button>Editar notificación</button>
-            <button>Borrar notificación</button>
           </div>
         </header>
 

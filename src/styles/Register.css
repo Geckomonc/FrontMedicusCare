@@ -46,7 +46,8 @@
   .register input[type="password"],
   .register input[type="text"],
   .register input[type="tel"],
-  .register input[type="number"]{
+  .register input[type="number"],
+  .register input[type="date"] {
     width: 100%;
     padding: 10px;
     margin: 5px 0 15px 0;

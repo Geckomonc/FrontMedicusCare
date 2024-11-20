@@ -14,6 +14,7 @@ function Sidebar() {
           </div>
           <nav className='options'>
             <Link to="/medicamentos">Medicamentos</Link>
+            <Link to="/recomendations">Recomendaciones</Link>
             <Link to="/registrar-medicamentos">Registrar medicamentos</Link>
             <Link to="/notificaciones">Notificaciones</Link>
             <Link to="/usuarios">Usuarios</Link>

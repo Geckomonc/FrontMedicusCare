@@ -1,0 +1,163 @@
+.recomendaciones {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    font-family: Calibri, Arial, sans-serif;
+}
+
+.content-med{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background-color: #f4f4f4;
+  }
+
+  .header-med {
+    background-color: #499EBF;
+    height: 10vh;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header-med h1{
+    font-size: 1.5rem;
+    color: #f4f4f4;
+  }
+
+  .content-recomendation {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+  }
+
+  .medication-recomendation {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Divide en tres columnas */
+    gap: 20px; /* Espacio entre columnas */
+    max-width: 500px; /* Ajusta el ancho del formulario */
+    background-color: #e5e5e6;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .medication-recomendation div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .medication-recomendation label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .medication-recomendation input,
+  .medication-recomendation select,
+  .medication-recomendation textarea {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .medication-recomendation button {
+    /* grid-column: span 3;  Hace que el botón ocupe toda la fila */
+    margin-top: 10px;
+    width: 140px;
+    height: 50px;
+    background-color: #499EBF;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .medication-recomendation button:hover {
+    background-color: #3b82a0;
+  }
+
+  .recomendation-table {
+    max-width: 1200px; /* Ajusta el ancho del formulario */
+    background-color: #e5e5e6;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .recomendation-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    border-radius: 8px;
+  }
+
+.recomendation-table th, .recomendation-table td {
+    padding: 10px;
+    text-align: left;
+}
+
+.recomendation-table th {
+    background-color: #499EBF;
+    font-weight: bold;
+    color: #f3eded;   
+}
+
+.recomendation-table tbody tr td {
+    background-color: #fff;
+}
+
+.recomendation-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Estos serán los estilos de mi botón editar recomendaciones inicio */
+
+.recomendation-edit {
+    display: grid;
+    gap: 20px; /* Espacio entre columnas */
+    max-width: 900px; /* Ajusta el ancho del formulario */
+    background-color: #e5e5e6;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .recomendation-edit div {
+    display: grid;
+    justify-content: center;
+  }
+  
+  .recomendation-edit label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .recomendation-edit input,
+  .recomendation-edit select,
+  .recomendation-edit textarea {
+    padding: 5px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .recomendation-edit button {
+    margin-top: 10px;
+    width: 140px;
+    height: 50px;
+    background-color: #499EBF;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .recomendation-edit button:hover {
+    background-color: #3b82a0;
+  }
+  
+  /* Estos serán los estilos de mi botón editar recomendaciones fin */

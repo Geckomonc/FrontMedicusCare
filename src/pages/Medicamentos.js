@@ -1,8 +1,43 @@
 import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
+import { addMedication } from "../request/request";
+import { getMedications } from "../request/request";
+
 import "../styles/Medicamentos.css";
 
 function Medicamentos() {
+    const [newMedication, setNewMedication] = useState({
+        name: "",
+        notes: "",
+        type_of_drug: "",
+        contradictions: "",
+    });
+    
+    const handleMedicationChange = (e) => {
+        const { name, value } = e.target;
+        setNewMedication({ ...newMedication, [name]: value });
+    };
+
+    const handleAddMedicationSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await addMedication(newMedication);
+            alert("Medicamento agregado con éxito");
+            console.log("Respuesta del servidor:", response);
+            // Limpia el formulario después de agregar
+            setNewMedication({
+                name: "",
+                notes: "",
+                type_of_drug: "",
+                contradictions: "",
+            });
+            setShowForm2(false); // Cierra el formulario
+        } catch (error) {
+            console.error("Error al agregar el medicamento:", error);
+            alert("Hubo un problema al agregar el medicamento.");
+        }
+    };
+    
     const [showForm, setShowForm] = useState(false);
     const [showForm2, setShowForm2] = useState(false);
     const [showMedications, setShowMedications] = useState(false);
@@ -10,7 +45,7 @@ function Medicamentos() {
 
     const [selectedMedication, setSelectedMedication] = useState(null);
     const [searchID, setSearchID] = useState("");
-    const [medications, setMedications] = useState(medicationsTest);
+    const [medications, setMedications] = useState([]);
 
     const handleAddMedication = () => {
         setShowForm(!showForm); // Alternar la visibilidad del formulario
@@ -21,18 +56,16 @@ function Medicamentos() {
     };
 
     const handleShowMedications = async () => {
-        setShowMedications(!showMedications);
-        /*
-        if (!showMedications) {
+        if (!showMedications) { // Solo carga los medicamentos si no se han mostrado
             try {
-                const response = await fetch('https://api.example.com/medications');
-                const data = await response.json();
-                setMedications(data);
+                const data = await getMedications();
+                setMedications(data); // Guardar los medicamentos en el estado
             } catch (error) {
                 console.error("Error al cargar los medicamentos:", error);
             }
-        }*/
-    };
+        }
+        setShowMedications(!showMedications); // Alternar visibilidad
+    };    
     //Funcionalidad de eliminar medicamento inicio
     const handleShowRegisterMedications = () => {
         setShowRegisterMedications(!showRegisterMedications);
@@ -97,23 +130,24 @@ function Medicamentos() {
             </header>
             {showForm2 && (
                 <div className='content-register'>                
-                    <form className="medication-register">
+                    <form className="medication-register" onSubmit={handleAddMedicationSubmit}>
                         <div>
                             <label>Nombre:</label>
-                            <input type="text" name="nombre" required />
+                            <input type="text" name="name" value={newMedication.name} onChange={handleMedicationChange} required />
                             <label>Notas</label>
-                            <textarea name="recomendaciones" required></textarea>
+                            <textarea name="notes" value={newMedication.notes} onChange={handleMedicationChange} required />
                         </div>
                         <div>
                             <label>Tipo de droga:</label>
-                            <select name="tipoDroga" required>
+                            <select name="type_of_drug" value={newMedication.type_of_drug} onChange={handleMedicationChange} required>
                                 <option value="">Selecciona el tipo</option>
-                                <option value="">Pastilla</option>
-                                <option value="">Jeringa</option>
-                                <option value="">Jarabe</option>
+                                <option value="2">Pastilla</option>
+                                <option value="3">Jeringa</option>
+                                <option value="5">Jarabe</option>
+                                <option value="4">Crema</option>
                             </select>
                             <label>Contraindicaciones:</label>
-                            <textarea name="contraindicaciones" required></textarea>                            
+                            <textarea name="contradictions" value={newMedication.contradictions} onChange={handleMedicationChange} required/>                           
                         </div>
                         <button type="submit">Guardar Medicamento</button>
                     </form>
@@ -149,9 +183,9 @@ function Medicamentos() {
                                     />
                                     <label>Tipo de Droga:</label>
                                     <select
-                                        value={selectedMedication.id_type_of_drug}
+                                        value={selectedMedication.type_of_drug}
                                         onChange={(e) =>
-                                            setSelectedMedication({ ...selectedMedication, id_type_of_drug: e.target.value })
+                                            setSelectedMedication({ ...selectedMedication, type_of_drug: e.target.value })
                                         }
                                     >
                                         <option value="pastilla">Pastilla</option>
@@ -178,26 +212,32 @@ function Medicamentos() {
                 {showMedications && (
                     <div className='medication-table'>
                         <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Contraindicaciones</th>
-                                        <th>Notas</th>
-                                        <th>Tipo de Droga</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {medicationsTest.map((med, index) => (
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Contraindicaciones</th>
+                                    <th>Notas</th>
+                                    <th>Tipo de Droga</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {medications.length > 0 ? (
+                                    medications.map((med, index) => (
                                         <tr key={index}>
-                                            <td>{med.id}</td>
+                                            <td>{med.id_medication}</td>
                                             <td>{med.name}</td>
                                             <td>{med.contradictions}</td>
                                             <td>{med.notes}</td>
-                                            <td>{med.id_type_of_drug}</td>
+                                            <td>{med.type_of_drug}</td>
                                         </tr>
-                                    ))}
-                                </tbody>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="5">No hay medicamentos disponibles</td>
+                                    </tr>
+                                )}
+                            </tbody>
                         </table>  
                     </div>
                 )}
@@ -229,11 +269,11 @@ function Medicamentos() {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{selectedMedication.id}</td>
+                                            <td>{selectedMedication.id_medication}</td>
                                             <td>{selectedMedication.name}</td>
                                             <td>{selectedMedication.contradictions}</td>
                                             <td>{selectedMedication.notes}</td>
-                                            <td>{selectedMedication.id_type_of_drug}</td>
+                                            <td>{selectedMedication.type_of_drug}</td>
                                         </tr>
                                     </tbody>
                                 </table>

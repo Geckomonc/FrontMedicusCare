@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "../styles/Login.css";
 import {signIn} from "../request/request";
+import { useAuth } from '../context/AuthContext'; 
 import { Link, useNavigate} from "react-router-dom";
 
 function Login() {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -16,11 +18,13 @@ function Login() {
       console.log(response);
       if (response.email) {
         // Guarda el token en localStorage o cookies
-        localStorage.setItem("token", response.email);
+        //localStorage.setItem("token", response.email);
+        login(response.email);
         // Redirige a la página principal
+        console.log("Entro al if");
         navigate("/pagina-principal");
       } else {
-
+        console.log("Entro al elsa");
         alert(response);
       }
     } catch (error) {

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import signUp from "../request/request";
+import { signUp } from "../request/request";
+
 import "../styles/Register.css";
 
 function Register() {

@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import "../styles/Notificaciones.css";
+import { getRegisterMedications, getNewAlert, sendEmailNotification } from "../request/request";
+
 
 function Notificaciones() {
   // --- Estados ---
   const [showForm4, setShowForm4] = useState(false); // Mostrar/Ocultar formulario
   const [notifications, setNotifications] = useState([]); // Lista de notificaciones
-  const [newNotification, setNewNotification] = useState({ message: '', date: '', time: '',registromedicamento: ''}); // Notificación nueva
+  const [newNotification, setNewNotification] = useState({ message: '', date: '', time: '',type_alert: ''}); // Notificación nueva
   const [activeNotification, setActiveNotification] = useState(null); // Notificación activa
+  const [registerMedications, setRegisterMedications] = useState([]);
+  const [selectedMedicationID, setSelectedMedicationID] = useState('');
+  const [selectedID, setSelectedID] = useState('');
+  const [typeAlert, setTypeAlert] = useState([]);
+  const [selectedMedication, setSelectedMedication] = useState(null);
 
+  
+  const [newAlert, setNewAlert] = useState({
+          type_of_alert: "",
+      });
   // --- Manejo de eventos ---
   const handleAddNotification = () => {
     setShowForm4(!showForm4); // Alternar visibilidad del formulario
@@ -19,18 +30,78 @@ function Notificaciones() {
     setNewNotification((prev) => ({ ...prev, [name]: value })); // Actualizar estado de la notificación nueva
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    const dateTime = new Date(`${newNotification.date}T${newNotification.time}`);
-    if (dateTime > new Date()) {
-      // Agregar nueva notificación a la lista
-      setNotifications((prev) => [...prev, { ...newNotification, dateTime }]);
-      setShowForm4(false); // Cerrar formulario
-      setNewNotification({ message: '', date: '', time: '' }); // Reiniciar formulario
-    } else {
-      alert('Por favor selecciona una fecha y hora futura.');
+   // Cargar medicamentos al montar el componente
+  useEffect(() => {
+      async function fetchMedications() {
+          try {
+            const data = await getRegisterMedications();
+            console.log("Medications fetched:", data);
+            setRegisterMedications(data);
+          } catch (error) {
+            console.error("Error al cargar los medicamentos:", error);
+          }
+        }
+        fetchMedications();
+  }, []);
+
+  // Cargar medicamentos al montar el componente
+  useEffect(() => {
+    async function fetchNotifications() {
+      try {
+        const data = await getNewAlert();
+        setTypeAlert(data);  // Actualiza correctamente los tipos de alerta
+      } catch (error) {
+        console.error("Error al cargar los tipos de alerta:", error);
+      }
     }
+    fetchNotifications();
+  }, []);
+  
+  const handleAlertChange = (e) => {
+    const { name, value } = e.target;
+    setNewAlert({ ...newAlert, [name]: value });
+    setSelectedID(value);
   };
+  const handleRegisterMedication = (e) => {
+    const selectedID = e.target.value;
+    setSelectedMedicationID(selectedID);
+    
+    // Buscar el medicamento seleccionado
+    const selectedMed = registerMedications.find(med => med.id_records === selectedID);
+    setSelectedMedication(selectedMed || null);
+};
+
+const handleFormSubmit = async (e) => {
+  e.preventDefault();
+  
+  const dateTime = new Date(`${newNotification.date}T${newNotification.time}`);
+  
+  if (dateTime > new Date()) {
+      // Crear el objeto de datos para el backend
+      const notificationData = {
+          id_type_alert: selectedID,
+          date: newNotification.date,
+          time: newNotification.time,
+          id_medication_record: selectedMedicationID,
+      };
+      
+      try {
+          // Enviar la notificación al backend
+          await sendEmailNotification(notificationData);
+          alert("Notificación enviada por correo con éxito.");
+          
+          // Agregarla también localmente a la lista de notificaciones
+          setNotifications((prev) => [...prev, { ...newNotification, dateTime }]);
+          setShowForm4(false); // Cerrar formulario
+          setNewNotification({ message: '', date: '', time: '' }); // Reiniciar formulario
+      } catch (error) {
+          alert("Hubo un problema al enviar la notificación.");
+          console.error(error);
+      }
+    } else {
+        alert('Por favor selecciona una fecha y hora futura.');
+    }
+};
 
   const handleNotificationAction = (action) => {
     if (action === 'done') {
@@ -77,32 +148,26 @@ function Notificaciones() {
           {/* Formulario para agregar notificación */}
           {showForm4 && (
             <form className="form-notificacion" onSubmit={handleFormSubmit}>
+              <label> Registro del medicamento:</label>
+              <select value={selectedMedicationID} onChange={handleRegisterMedication} required>
+                                    <option value="">Seleccionar...</option>
+                                    {registerMedications.map((med) => (
+                                        <option key={med.id_record} value={med.id_record}>
+                                            {med.id_medication} (ID: {med.id_record})
+                                        </option>
+                                    ))}
+              </select>
+              <label> Tipo de alerta:</label>
+              <select name="type_of_alert" value={newAlert.type_of_alert} onChange={handleAlertChange} required>
+                  <option value="">Seleccionar...</option>
+                  {typeAlert.map((type) => (
+                    <option key={type.id_type_alert} value={type.id_type_alert}>
+                        {type.alert_text} (Importancia: {type.relevance})(ID: {type.id_type_alert}) 
+                    </option>
+                      ))}
+              </select>
               <label>
-                Medicamento:
-                <select
-                  name="registromedicamento"
-                  value={newNotification.registromedicamento || ''} // Valor actual del estado
-                  onChange={handleInputChange} // Manejar cambios
-                  required
-                >
-                  <option value="">Seleccione un registro</option> {/* Opción por defecto */}
-                  <option value="1">Medicamento 1</option>
-                  <option value="2">Medicamento 2</option>
-                  <option value="3">Medicamento 3</option>
-                </select>
-              </label>
-              <label>
-                Mensaje:
-                <input
-                  type="text"
-                  name="message"
-                  value={newNotification.message}
-                  onChange={handleInputChange}
-                  required
-                />
-              </label>
-              <label>
-                Fecha:
+                Fecha: 
                 <input
                   type="date"
                   name="date"
@@ -112,7 +177,7 @@ function Notificaciones() {
                 />
               </label>
               <label>
-                Hora:
+                Hora: 
                 <input
                   type="time"
                   name="time"

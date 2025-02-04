@@ -51,9 +51,9 @@
 
   .form-notificacion {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Divide en tres columnas */
+    /*grid-template-columns: 1fr 1fr; /* Divide en tres columnas */
     gap: 20px; /* Espacio entre columnas */
-    max-width: 500px; /* Ajusta el ancho del formulario */
+    max-width: 800px; /* Ajusta el ancho del formulario */
     background-color: #e5e5e6;
     padding: 20px;
     border-radius: 12px;

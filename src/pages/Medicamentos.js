@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import { addMedication } from "../request/request";
 import { getMedications } from "../request/request";
+import { getMedicationById } from "../request/request";
+import { updateMedication } from "../request/request";
+import { deleteMedication, getDrugTypes} from "../request/request";
 
 import "../styles/Medicamentos.css";
 
@@ -17,6 +20,20 @@ function Medicamentos() {
         const { name, value } = e.target;
         setNewMedication({ ...newMedication, [name]: value });
     };
+
+    useEffect(() => {
+        // Obtener los tipos de droga cuando se monta el componente
+        async function fetchDrugTypes() {
+            try {
+                const types = await getDrugTypes();
+                console.log(types);
+                setTypeMed(types);  // Guardar los tipos de droga en el estado
+            } catch (error) {
+                console.error("Error al obtener los tipos de droga:", error);
+            }
+        }
+        fetchDrugTypes();
+    }, []);
 
     const handleAddMedicationSubmit = async (e) => {
         e.preventDefault();
@@ -42,10 +59,11 @@ function Medicamentos() {
     const [showForm2, setShowForm2] = useState(false);
     const [showMedications, setShowMedications] = useState(false);
     const [showRegisterMedications, setShowRegisterMedications] = useState(false);
-
+    const [selectedTypeID, setSelectedTypeID] = useState('');
     const [selectedMedication, setSelectedMedication] = useState(null);
     const [searchID, setSearchID] = useState("");
     const [medications, setMedications] = useState([]);
+    const [typeMed, setTypeMed] = useState([]);
 
     const handleAddMedication = () => {
         setShowForm(!showForm); // Alternar la visibilidad del formulario
@@ -53,6 +71,15 @@ function Medicamentos() {
 
     const handleRegisterMedication = () => {
         setShowForm2(!showForm2);
+    };
+
+    const handleSelectType = (e) => {
+        const selectedID = e.target.value;
+        setSelectedTypeID(selectedID);
+        
+        // Buscar el medicamento seleccionado
+        const selectedType = typeMed.find(med => med.id === selectedID);
+        setSelectedMedication(selectedType || null);
     };
 
     const handleShowMedications = async () => {
@@ -73,40 +100,66 @@ function Medicamentos() {
         setSelectedMedication(null);
     };
 
-    const handleSearchMedication2 = () => {
-        const medication = medications.find((med) => med.id === searchID);
-        setSelectedMedication(medication || null);
-    };
-
-    const handleDeleteMedication = () => {
+    const handleDeleteMedication = async () => {
         if (selectedMedication) {
-            setMedications(medications.filter((med) => med.id !== selectedMedication.id));
-            setSelectedMedication(null);
-            setSearchID("");
+            try {
+                await deleteMedication(selectedMedication.id_medication);  // Llamar al backend
+                alert("Medicamento eliminado con éxito.");
+    
+                // Actualiza la lista de medicamentos local
+                setMedications(medications.filter((med) => med.id_medication !== selectedMedication.id_medication));
+                setSelectedMedication(null);
+                setSearchID("");
+            } catch (error) {
+                console.error("Error al eliminar el medicamento:", error);
+                alert("Hubo un problema al eliminar el medicamento.");
+            }
         }
-    };
+    };    
 
     const handleCancelDelete = () => {
         setSelectedMedication(null);
         setSearchID("");
     };
-    //Funcionalidad de eliminar medicamento fin
-
-    const handleSearchMedication = (id) => {
-        // Buscar el medicamento por ID
-        const medication = medicationsTest.find((med) => med.id === id);
-        if (medication) {
-            setSelectedMedication(medication);
-        } else {
-            setSelectedMedication(null); // Si no se encuentra, limpiar selección
+    const handleSearchMedication = async (id) => {
+        try {
+            const response = await getMedicationById(id);
+            if (response && response.length > 0) {
+                setSelectedMedication(response[0]);  // Asignar el primer elemento del array
+            } else {
+                setSelectedMedication(null);  // Limpiar la selección si no se encuentra el medicamento
+                alert("No se encontró el medicamento con el ID proporcionado.");
+            }
+        } catch (error) {
+            console.error("Error al buscar el medicamento:", error);
+            alert("Hubo un problema al buscar el medicamento.");
         }
     };
-
-    const handleSaveMedication = () => {
+    
+    const handleSaveMedication = async () => {
         if (selectedMedication) {
-            console.log("Medicamento actualizado:", selectedMedication);
-            setSelectedMedication(null);
-            setShowForm(false);
+            try {
+                const updatedData = {
+                    id_medication: selectedMedication.id_medication,
+                    name: selectedMedication.name,
+                    notes: selectedMedication.notes,
+                    type_of_drug: 1,
+                    contradictions: selectedMedication.contradictions,
+                };
+                console.log("Datos actualizados a enviar:", updatedData); 
+                await updateMedication(selectedMedication.id_medication, updatedData);
+                alert("Medicamento actualizado con éxito.");
+                
+                // Actualiza el listado de medicamentos si es necesario
+                await handleShowMedications();
+    
+                // Resetea la selección
+                setSelectedMedication(null);
+                setShowForm(false);
+            } catch (error) {
+                console.error("Error al guardar el medicamento:", error);
+                alert("Hubo un problema al actualizar el medicamento.");
+            }
         }
     };
 
@@ -125,7 +178,7 @@ function Medicamentos() {
                     <button onClick={handleRegisterMedication}>Agregar medicamento</button>
                     <button onClick={handleShowMedications}>Mostrar Medicamento</button>
                     <button onClick={handleAddMedication}>Editar Medicamentos</button>
-                    <button onClick={handleShowRegisterMedications}>Borrar Medicametos</button>
+                    <button onClick={handleShowRegisterMedications}>Borrar Medicamentos</button>
                 </div>
             </header>
             {showForm2 && (
@@ -140,11 +193,12 @@ function Medicamentos() {
                         <div>
                             <label>Tipo de droga:</label>
                             <select name="type_of_drug" value={newMedication.type_of_drug} onChange={handleMedicationChange} required>
-                                <option value="">Selecciona el tipo</option>
-                                <option value="2">Pastilla</option>
-                                <option value="3">Jeringa</option>
-                                <option value="5">Jarabe</option>
-                                <option value="4">Crema</option>
+                                <option value="">Seleccionar...</option>
+                                {typeMed.map((type) => (
+                                    <option key={type.id_type_of_drug} value={type.id_type_of_drug}>
+                                        {type.type} (ID: {type.id_type_of_drug})
+                                    </option>
+                                ))}
                             </select>
                             <label>Contraindicaciones:</label>
                             <textarea name="contradictions" value={newMedication.contradictions} onChange={handleMedicationChange} required/>                           
@@ -158,12 +212,13 @@ function Medicamentos() {
                     <form className="medication-edit">
                         <div>
                             <label>ID del Medicamento:</label>
-                                <input
-                                    type="text"
-                                    onChange={(e) => handleSearchMedication(e.target.value)}
-                                    placeholder="Ingrese ID"
-                                />
-                            </div>
+                            <input
+                                type="text"
+                                value={searchID}
+                                onChange={(e) => setSearchID(e.target.value)}  // Solo guarda el valor
+                                placeholder="Ingrese ID"
+                            />
+                        </div>
                         {selectedMedication && (
                                 <div>
                                     <label>Nombre:</label>
@@ -171,7 +226,7 @@ function Medicamentos() {
                                         type="text"
                                         value={selectedMedication.name}
                                         onChange={(e) =>
-                                                setSelectedMedication({ ...selectedMedication, name: e.target.value })
+                                            setSelectedMedication({ ...selectedMedication, name: e.target.value })
                                         }
                                     />
                                     <label>Notas:</label>
@@ -188,9 +243,9 @@ function Medicamentos() {
                                             setSelectedMedication({ ...selectedMedication, type_of_drug: e.target.value })
                                         }
                                     >
-                                        <option value="pastilla">Pastilla</option>
-                                        <option value="jeringa">Jeringa</option>
-                                        <option value="jarabe">Jarabe</option>
+                                        <option value="1">Pastilla</option>
+                                        <option value="2">Jeringa</option>
+                                        <option value="3">Jarabe</option>
                                     </select>
                                     <label>Contraindicaciones:</label>
                                     <textarea
@@ -202,6 +257,7 @@ function Medicamentos() {
                                 </div>
                         )}
                         <div className="form-actions">
+                            <button type="button" onClick={() => handleSearchMedication(searchID)}>Buscar</button>
                             <button type="button" onClick={handleSaveMedication}>Guardar</button>
                             <button type="button" onClick={handleCancelEdit}>Cancelar</button>
                         </div>
@@ -250,10 +306,10 @@ function Medicamentos() {
                             <input
                                 type="text"
                                 value={searchID}
-                                onChange={(e) => setSearchID(e.target.value)}
-                                placeholder="Ingrese el ID"
+                                onChange={(e) => setSearchID(e.target.value)}  // Solo guarda el valor
+                                placeholder="Ingrese ID"
                             />
-                            <button onClick={handleSearchMedication2}>Buscar</button>
+                            <button type="button" onClick={() => handleSearchMedication(searchID)}>Buscar</button>
                         </div>
                         {selectedMedication && (
                             <div className="delete-table">
@@ -296,19 +352,3 @@ function Medicamentos() {
 
 export default Medicamentos;
 
-const medicationsTest = [
-    {
-    "id": "1",
-    "name": "Acetaminofen",
-    "contradictions": "Dolor de pecho",
-    "notes": "Tomarse cada 6 horas minimo",
-    "id_type_of_drug": "pastilla"
-    },
-    {
-    "id": "2",
-    "name": "Ibuprofeno",
-    "contradictions": "cancér de pulmón",
-    "notes": "ojo con la taquicardia",
-    "id_type_of_drug": "pastilla"
-    }
-]

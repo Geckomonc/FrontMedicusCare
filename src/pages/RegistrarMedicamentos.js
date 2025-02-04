@@ -1,74 +1,141 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import "../styles/Medicamentos.css";
+import { getMedications, addRegisterMedication, getRegisterMedications, getRegisterMedicationById , updateRegisterMedication, deleteRegisterMedication} from "../request/request";
+
 
 function RegistrarMedicamentos() {
     const [showForm3, setShowForm3] = useState(false);
     const [showForm2, setShowForm2] = useState(false);
     const [deleteMedications, setDeleteShowMedications] = useState(false);
     const [showRegisterMedications, setShowRegisterMedications] = useState(false);
-
+    const [selectedMedicationID, setSelectedMedicationID] = useState('');
+    const [registerMedication, setRegisterMedication] = useState([]);
     const [selectedMedication, setSelectedMedication] = useState(null);
     const [searchID, setSearchID] = useState("");
     const [medications, setMedications] = useState(registerTest);
+    const [newAlert, setNewAlert] = useState([]);
+
 
     const handleAddMedication = () => {
         setShowForm3(!showForm3); // Alternar la visibilidad del formulario
+    };
+
+    // Cargar medicamentos al montar el componente
+    useEffect(() => {
+        async function fetchMedications() {
+            try {
+                const data = await getMedications();
+                setMedications(data);
+            } catch (error) {
+                console.error("Error al cargar los medicamentos:", error);
+            }
+        }
+        fetchMedications();
+    }, []);
+
+    const handleSubmitRegistrarMed = async (e) => {
+        e.preventDefault();
+    
+        // Capturar los valores del formulario
+        const newMedication = {
+            id_record: selectedMedicationID,
+            status: e.target.estado.value,
+            amount: e.target.cantidad.value,
+            last_time: e.target.fechaActual.value,
+            expiration_date: e.target.fechaVencimiento.value,
+            lot_number: e.target.codigoLote.value,
+            comments: e.target.comentarios.value,
+        };
+        console.log("Datos a enviar:", newMedication); 
+
+        try {
+            // Llamada al endpoint de registro de medicamentos
+            await addRegisterMedication(newMedication);
+            alert("Medicamento registrado con éxito");
+    
+            // Limpiar formulario
+            setSelectedMedicationID('');
+            e.target.reset(); // Resetear los valores del formulario
+            setShowForm3(false);
+
+        } catch (error) {
+            console.error("Error al registrar el medicamento:", error);
+            alert("Hubo un error al registrar el medicamento.");
+        }
+    };
+  
+
+    const handleSelectMedication = (e) => {
+        const selectedID = e.target.value;
+        setSelectedMedicationID(selectedID);
+        
+        // Buscar el medicamento seleccionado
+        const medication = medications.find(med => med.id === selectedID);
+        setSelectedMedication(medication || null);
     };
 
     const handleEditMedication = () => {
         setShowForm2(!showForm2);
     };
 
-    const handleSearchMedication2 = () => {
-        const medication = medications.find((med) => med.id === searchID);
-        setSelectedMedication(medication || null);
-    };
-
-    const handleDeleteMedications = async () => {
-        setDeleteShowMedications(!deleteMedications);
-        /*
-        if (!showMedications) {
-            try {
-                const response = await fetch('https://api.example.com/medications');
-                const data = await response.json();
-                setMedications(data);
-            } catch (error) {
-                console.error("Error al cargar los medicamentos:", error);
-            }
-        }*/
-    };
 
     const handleShowRegisterMedications = async () => {
-        setShowRegisterMedications(!showRegisterMedications);
-        /*
-        if (!showMedications) {
+        if (!showRegisterMedications) {
             try {
-                const response = await fetch('https://api.example.com/medications');
-                const data = await response.json();
-                setMedications(data);
+                const medData = await getRegisterMedications(); // Llamada al request para obtener medicamentos
+                console.log(medData);
+                setRegisterMedication(medData); // Guardar los medicamentos en el estado
             } catch (error) {
                 console.error("Error al cargar los medicamentos:", error);
             }
-        }*/
-    };
-    //Funcionalidad editar medicamentos registrados
-
-    const handleSearchMedication = (id) => {
-        // Buscar el medicamento por ID
-        const medication = registerTest.find((med) => med.id === id);
-        if (medication) {
-            setSelectedMedication(medication);
-        } else {
-            setSelectedMedication(null); // Si no se encuentra, limpiar selección
         }
+        setShowRegisterMedications(!showRegisterMedications); // Alternar visibilidad
     };
 
-    const handleSaveMedication = () => {
+    
+    const handleDeleteMedications = async () => {
+        setDeleteShowMedications(!deleteMedications);
+    };
+
+    const handleSearchMedication = async (id) => {
+        try {
+                    const response = await getRegisterMedicationById(id);
+                    if (response && response.length > 0) {
+                        setSelectedMedication(response[0]);  // Asignar el primer elemento del array
+                    } else {
+                        setSelectedMedication(null);  // Limpiar la selección si no se encuentra el medicamento
+                        alert("No se encontró el medicamento con el ID proporcionado.");
+                    }
+                } catch (error) {
+                    console.error("Error al buscar el medicamento:", error);
+                    alert("Hubo un problema al buscar el medicamento.");
+                }
+    };
+
+    const handleSaveMedication = async () => {
         if (selectedMedication) {
-            console.log("Medicamento actualizado:", selectedMedication);
-            setSelectedMedication(null);
-            setShowForm2(false);
+                    try {
+                        const updatedData = {
+                            id_record: selectedMedication.id_record,
+                            status: selectedMedication.status,
+                            amount: selectedMedication.amount,
+                            last_time: selectedMedication.last_time,
+                            expiration_date: selectedMedication.expiration_date,
+                            lot_number: selectedMedication.lot_number,
+                            comments: selectedMedication.comments,
+                        };
+                        console.log("Datos actualizados a enviar:", updatedData); 
+                        await updateRegisterMedication(selectedMedication.id_medication, updatedData);
+                        alert("Medicamento actualizado con éxito.");
+            
+                        // Resetea la selección
+                        setSelectedMedication(null);
+                        setShowForm2(false);
+                    } catch (error) {
+                        console.error("Error al guardar el medicamento:", error);
+                        alert("Hubo un problema al actualizar el medicamento.");
+                    }
         }
     };
 
@@ -80,11 +147,22 @@ function RegistrarMedicamentos() {
     //Fin funcionalidad medicamentos registrados
 
     //Inicio funcionalidad borrar registro medicamento
-    const handleDeleteMedication = () => {
-        if (selectedMedication) {
-            setMedications(medications.filter((med) => med.id !== selectedMedication.id));
-            setSelectedMedication(null);
-            setSearchID("");
+    const handleDeleteMedication = async () => {
+        if (selectedMedication && selectedMedication.id_record) {
+                    try {
+                        await deleteRegisterMedication(selectedMedication.id_record);  // Llamar al backend
+                        alert("Registro de medicamento eliminado con éxito.");
+            
+                        // Actualiza la lista de recomendaciones en el estado local
+                        setMedications(medications.filter((rec) => rec.id_record !== selectedMedication.id_record));
+                        setSelectedMedication(null);
+                        setSearchID("");
+                    } catch (error) {
+                        console.error("Error al eliminar el registro:", error);
+                        alert("Hubo un problema al eliminar el registro.");
+                    }
+                } else {
+                    alert("Por favor, busca y selecciona una recomendación válida antes de eliminar.");
         }
     };
 
@@ -110,16 +188,19 @@ function RegistrarMedicamentos() {
             </header>
             {showForm3 && (
                 <div className='content-add'>
-                
-                    <form className="medication-form">
+                    <form className="medication-form" onSubmit={handleSubmitRegistrarMed}>
                         <div>
-                            <label>Medicamento:</label>
-                            <select name="medicamento" required>
-                                <option value="">Selecciona el medicamento</option> {/* Opción por defecto */}
-                                <option value="">Ibuprofeno</option>
-                                <option value="">Acetaminofén</option>
-                                <option value="">Nitrofurantoina</option>
-                            </select>
+                            <div>
+                                <label>Seleccionar Medicamento:</label>
+                                <select value={selectedMedicationID} onChange={handleSelectMedication} required>
+                                    <option value="">Seleccionar...</option>
+                                    {medications.map((med) => (
+                                        <option key={med.id_medication} value={med.id_medication}>
+                                            {med.name} (ID: {med.id_medication})
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                             <label>Estado:</label>
                             <select name="estado" required>
                                 <option value="">Selecciona un estado</option> {/* Opción por defecto */}
@@ -163,16 +244,16 @@ function RegistrarMedicamentos() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {registerTest.map((reg, index) => (
+                                    {registerMedication.map((reg, index) => (
                                         <tr key={index}>
-                                            <td>{reg.id}</td>
-                                            <td>{reg.medicamento}</td>
-                                            <td>{reg.fecha_registro}</td>
-                                            <td>{reg.fecha_vencimiento}</td>
-                                            <td>{reg.estado}</td>
-                                            <td>{reg.codigo_lote}</td>
-                                            <td>{reg.cantidad}</td>
-                                            <td>{reg.comentarios}</td>
+                                            <td>{reg.id_record}</td>
+                                            <td>{reg.id_medication}</td>
+                                            <td>{reg.last_time}</td>
+                                            <td>{reg.expiration_date}</td>
+                                            <td>{reg.status ? "Activo" : "Inactivo"}</td>
+                                            <td>{reg.lot_number}</td>
+                                            <td>{reg.amount}</td>
+                                            <td>{reg.comments}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -185,55 +266,50 @@ function RegistrarMedicamentos() {
                     <div className='content-add'>
                         <form className="medication-form">
                             <div>
-                                <label>ID Medicamento:</label>
+                                <label>ID del Medicamento:</label>
                                 <input
                                     type="text"
-                                    placeholder="Buscar por ID"
-                                    onChange={(e) => handleSearchMedication(e.target.value)}
+                                    value={searchID}
+                                    onChange={(e) => setSearchID(e.target.value)}  // Solo guarda el valor
+                                    placeholder="Ingrese ID"
                                 />
                             </div>
                             {selectedMedication && (
                                 <div>
                                     <label>Medicamento:</label>
-                                    <input
-                                        type="text"
-                                        value={selectedMedication.medicamento}
-                                        onChange={(e) =>
-                                            setSelectedMedication({
-                                                ...selectedMedication,
-                                                medicamento: e.target.value,
-                                            })
-                                        }
-                                    />
+                                    <p>
+                                        {medications.find((med) => med.id_medication === selectedMedication.id_medication)?.name}
+                                        {' '} {selectedMedication.id_medication}
+                                    </p>
                                     <label>Fecha de Registro:</label>
                                     <input
                                         type="date"
-                                        value={selectedMedication.fecha_registro}
+                                        value={selectedMedication.last_time}
                                         onChange={(e) =>
                                             setSelectedMedication({
                                                 ...selectedMedication,
-                                                fecha_registro: e.target.value,
+                                                last_time: e.target.value,
                                             })
                                         }
                                     />
                                     <label>Fecha de Vencimiento:</label>
                                     <input
                                         type="date"
-                                        value={selectedMedication.fecha_vencimiento}
+                                        value={selectedMedication.expiration_date}
                                         onChange={(e) =>
                                             setSelectedMedication({
                                                 ...selectedMedication,
-                                                fecha_vencimiento: e.target.value,
+                                                expiration_date: e.target.value,
                                             })
                                         }
                                     />
                                     <label>Estado:</label>
                                     <select
-                                        value={selectedMedication.estado}
+                                        value={selectedMedication.status}
                                         onChange={(e) =>
                                             setSelectedMedication({
                                                 ...selectedMedication,
-                                                estado: e.target.value,
+                                                status: e.target.value,
                                             })
                                         }
                                     >
@@ -243,38 +319,39 @@ function RegistrarMedicamentos() {
                                     <label>Código de Lote:</label>
                                     <input
                                         type="text"
-                                        value={selectedMedication.codigo_lote}
+                                        value={selectedMedication.lot_number}
                                         onChange={(e) =>
                                             setSelectedMedication({
                                                 ...selectedMedication,
-                                                codigo_lote: e.target.value,
+                                                lot_number: e.target.value,
                                             })
                                         }
                                     />
                                     <label>Cantidad:</label>
                                     <input
                                         type="text"
-                                        value={selectedMedication.cantidad}
+                                        value={selectedMedication.amount}
                                         onChange={(e) =>
                                             setSelectedMedication({
                                                 ...selectedMedication,
-                                                cantidad: e.target.value,
+                                                amount: e.target.value,
                                             })
                                         }
                                     />
                                     <label>Comentarios:</label>
                                     <textarea
-                                        value={selectedMedication.comentarios}
+                                        value={selectedMedication.comments}
                                         onChange={(e) =>
                                             setSelectedMedication({
                                                 ...selectedMedication,
-                                                comentarios: e.target.value,
+                                                comments: e.target.value,
                                             })
                                         }
                                     />
                                 </div>
                             )}
                             <div className="form-actions">
+                                <button type="button" onClick={() => handleSearchMedication(searchID)}>Buscar</button>
                                 <button type="button" onClick={handleSaveMedication}>
                                     Guardar
                                 </button>
@@ -290,14 +367,13 @@ function RegistrarMedicamentos() {
                 {deleteMedications && (
                     <div className='content-delete'>
                         <div>
-                            <label>ID del Medicamento a Eliminar:</label>
+                            <label>ID del Registro de Medicamento a Eliminar:</label>
                             <input
                                 type="text"
                                 value={searchID}
                                 onChange={(e) => setSearchID(e.target.value)}
                                 placeholder="Ingresa el ID"
                             />
-                            <button onClick={handleSearchMedication2}>Buscar</button>
                         </div>
                         {selectedMedication && (
                             <div className="delete-table">
@@ -316,25 +392,27 @@ function RegistrarMedicamentos() {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{selectedMedication.id}</td>
-                                            <td>{selectedMedication.medicamento}</td>
-                                            <td>{selectedMedication.fecha_registro}</td>
-                                            <td>{selectedMedication.fecha_vencimiento}</td>
-                                            <td>{selectedMedication.estado}</td>
-                                            <td>{selectedMedication.codigo_lote}</td>
-                                            <td>{selectedMedication.cantidad}</td>
-                                            <td>{selectedMedication.comentarios}</td>
+                                            <td>{selectedMedication.id_record}</td>
+                                            <td>{selectedMedication.id_medication}</td>
+                                            <td>{selectedMedication.last_time}</td>
+                                            <td>{selectedMedication.expiration_date}</td>
+                                            <td>{selectedMedication.status ? "Activo" : "Inactivo"}</td>
+                                            <td>{selectedMedication.lot_number}</td>
+                                            <td>{selectedMedication.amount}</td>
+                                            <td>{selectedMedication.comments}</td>
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div className="delete-actions">
-                                    <button onClick={handleDeleteMedication}>Eliminar</button>
-                                    <button onClick={handleCancelDelete}>Cancelar</button>
-                                </div>
+                                
                             </div>
                         )}
+                        <div className="delete-actions">
+                            <button type="button" onClick={() => handleSearchMedication(searchID)}>Buscar</button>
+                            <button onClick={handleDeleteMedication}>Eliminar</button>
+                            <button onClick={handleCancelDelete}>Cancelar</button>
+                        </div>
                         {!selectedMedication && searchID && (
-                            <p>No se encontró un medicamento con el ID proporcionado.</p>
+                            <p>No se encontró un registro de medicamento con el ID proporcionado.</p>
                         )}
                     </div>
                 )}

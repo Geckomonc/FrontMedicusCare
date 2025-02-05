@@ -16,8 +16,19 @@ export async function signUp(user) {
 }
 
 export async function signIn(user) {
+    /*
     try {
         const response = await api.post("/login", user);
+        return response.data;
+    } catch (error) {
+        console.error("Error en signIn:", error);
+        throw error;
+    }*/
+    try {
+        const response = await api.post("/login", user);
+        if (response.data && response.data.email) {
+            localStorage.setItem("userEmail", response.data.email);
+        }
         return response.data;
     } catch (error) {
         console.error("Error en signIn:", error);
@@ -270,7 +281,9 @@ export async function addRegisterMedication(medication) {
             },
         };
         medication.id_patient = patient;
-        console.log(medication.id_medication)
+        console.log(patient)
+        console.log(medication)
+        console.log(medication.id_record)
         // Enviar la solicitud con el token
         const response = await api.post(`/medications/records/create`, medication, config);
         return response.data;
@@ -417,6 +430,16 @@ export async function sendEmailNotification(notificationData) {
         return response.data;
     } catch (error) {
         console.error("Error al enviar la notificación por correo:", error);
+        throw error;
+    }
+}
+
+export async function sendContactMessage(contactData) {
+    try {
+        const response = await api.post("/contact", contactData);
+        return response.data;
+    } catch (error) {
+        console.error("Error al enviar el mensaje de contacto:", error);
         throw error;
     }
 }

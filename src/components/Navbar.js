@@ -16,14 +16,14 @@ function Navbar() {
         <img src={Logo} />
         <div className="hiddenLinks">
           <Link to="/"> Home </Link>
-          <Link to="/about"> About </Link>
-          <Link to="/contact"> Contact </Link>
+          <Link to="/about"> Acerca de Nosotros </Link>
+          <Link to="/contact"> Contáctanos </Link>
         </div>
       </div>
       <div className="rightSide">
         <Link to="/"> Home </Link>
-        <Link to="/about"> About </Link>
-        <Link to="/contact"> Contact </Link>
+        <Link to="/about"> Acerca de Nosotros</Link>
+        <Link to="/contact"> Contáctanos  </Link>
         <button onClick={toggleNavbar}>
           <FaBeer />
         </button>

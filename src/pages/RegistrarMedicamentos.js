@@ -13,9 +13,21 @@ function RegistrarMedicamentos() {
     const [registerMedication, setRegisterMedication] = useState([]);
     const [selectedMedication, setSelectedMedication] = useState(null);
     const [searchID, setSearchID] = useState("");
-    const [medications, setMedications] = useState(registerTest);
-    const [newAlert, setNewAlert] = useState([]);
-
+    const [medications, setMedications] = useState([]);
+    const [newMedication, setNewMedication] = useState({
+            id_record: "",
+            status: "",
+            amount: "",
+            last_time: "",
+            expiration_date: "",
+            lot_number: "",
+            comments: "",
+        });
+        
+        const handleMedicationChange = (e) => {
+            const { name, value } = e.target;
+            setNewMedication({ ...newMedication, [name]: value });
+        };
 
     const handleAddMedication = () => {
         setShowForm3(!showForm3); // Alternar la visibilidad del formulario
@@ -55,7 +67,7 @@ function RegistrarMedicamentos() {
             alert("Medicamento registrado con éxito");
     
             // Limpiar formulario
-            setSelectedMedicationID('');
+            //setSelectedMedicationID('');
             e.target.reset(); // Resetear los valores del formulario
             setShowForm3(false);
 
@@ -68,11 +80,14 @@ function RegistrarMedicamentos() {
 
     const handleSelectMedication = (e) => {
         const selectedID = e.target.value;
+        console.log("ID seleccionado:", selectedID);
         setSelectedMedicationID(selectedID);
         
         // Buscar el medicamento seleccionado
-        const medication = medications.find(med => med.id === selectedID);
-        setSelectedMedication(medication || null);
+        //const medication = medications.find(med => med.id === selectedID);
+        //console.log(medication);
+        //console.log(selectedID);
+        //setSelectedMedication(medication || null);
     };
 
     const handleEditMedication = () => {
@@ -423,26 +438,3 @@ function RegistrarMedicamentos() {
 }
 
 export default RegistrarMedicamentos;
-
-const registerTest = [
-    {
-    "id": "1",
-    "medicamento": "Acetaminofen",
-    "fecha_registro": "4/11/2024",
-    "fecha_vencimiento": "4/11/2027",
-    "estado": "activo",
-    "codigo_lote": "SD345",
-    "cantidad": "30",
-    "comentarios": "No tomar después de tomar acetopan"
-    },
-    {
-    "id": "2",
-    "medicamento": "Ibuprofeno",
-    "fecha_registro": "13/10/2024",
-    "fecha_vencimiento": "25/07/2027",
-    "estado": "activo",
-    "codigo_lote": "SDF6987",
-    "cantidad": "13",
-    "comentarios": "No tomar después de tomar acetopan"
-    }
-]

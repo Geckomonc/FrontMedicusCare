@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signUp } from "../request/request";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "../styles/Register.css";
 
 function Register() {
@@ -14,7 +15,10 @@ function Register() {
         confirmPassword: '',
         dateOfBirth: '',
       });
-    
+      const notifySuccess = () => toast.success("Usuario creado con éxito");
+      const notifyError = (message) => toast.error(`${message}`);
+      const navigate = useNavigate();
+      
       const [errors, setErrors] = useState({
         passwordMismatch: false,
       });
@@ -39,8 +43,11 @@ function Register() {
         }
         try {
             const response = await signUp(formData);
+            notifySuccess();
+            setTimeout(() => navigate("/login"), 3500);
             console.log("Formulario enviado:", response);
         } catch (error) {
+            notifyError("Error al crear la cuenta.");
             console.error("Error al enviar el formulario:", error);
         }
     };
@@ -52,11 +59,11 @@ function Register() {
         <form className="formulario-registro" onSubmit={handleSubmit}>
             <div className="form-row">
                 <div className="form-col">
-                <label htmlFor="name">name</label>
-                <input type="text" id="name" name="name" placeholder="name" onChange={handleChange} value={formData.name} />
+                <label htmlFor="name">Nombre</label>
+                <input type="text" id="name" name="name" placeholder="nombre completo" onChange={handleChange} value={formData.name} />
                 </div>
                 <div className="form-col">
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email">Correo</label>
                 <input type="text" id="email" name="email" placeholder="you@example.com" onChange={handleChange} value={formData.email} />
                 </div>
             </div>
@@ -71,14 +78,14 @@ function Register() {
                 </select>
                 </div>
                 <div className="form-col">
-                <label htmlFor="phoneNumber">Número de phoneNumber</label>
+                <label htmlFor="phoneNumber">Número de celular</label>
                 <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="1234567890" onChange={handleChange} value={formData.phoneNumber} />
                 </div>
             </div>
 
             <div className="form-row">
                 <div className="form-col">
-                <label htmlFor="dateOfBirth">Año de dateOfBirth</label>
+                <label htmlFor="dateOfBirth">Año de nacimiento</label>
                 <input type="date" id="dateOfBirth" name="dateOfBirth" placeholder="1990" onChange={handleChange} value={formData.dateOfBirth} />
                 </div>
                 <div className="form-col">
@@ -99,6 +106,9 @@ function Register() {
             <button type="submit" className="register-button">Crear cuenta</button>
         </form>
       </div>
+
+      {/* Mueve el ToastContainer aquí, para que esté disponible globalmente */}
+      <ToastContainer />
     </div>
   )
 }

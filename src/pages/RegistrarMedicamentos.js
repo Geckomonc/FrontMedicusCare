@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import "../styles/Medicamentos.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { getMedications, addRegisterMedication, getRegisterMedications, getRegisterMedicationById , updateRegisterMedication, deleteRegisterMedication} from "../request/request";
-
 
 function RegistrarMedicamentos() {
     const [showForm3, setShowForm3] = useState(false);
     const [showForm2, setShowForm2] = useState(false);
+    const notifySuccess = (message) => toast.success(`${message}`);
     const [deleteMedications, setDeleteShowMedications] = useState(false);
     const [showRegisterMedications, setShowRegisterMedications] = useState(false);
     const [selectedMedicationID, setSelectedMedicationID] = useState('');
@@ -51,7 +53,7 @@ function RegistrarMedicamentos() {
     
         // Capturar los valores del formulario
         const newMedication = {
-            id_record: selectedMedicationID,
+            id_medication: selectedMedicationID,
             status: e.target.estado.value,
             amount: e.target.cantidad.value,
             last_time: e.target.fechaActual.value,
@@ -64,7 +66,7 @@ function RegistrarMedicamentos() {
         try {
             // Llamada al endpoint de registro de medicamentos
             await addRegisterMedication(newMedication);
-            alert("Medicamento registrado con éxito");
+            notifySuccess("Registro de medicamento guardado con éxito");
     
             // Limpiar formulario
             //setSelectedMedicationID('');
@@ -132,7 +134,7 @@ function RegistrarMedicamentos() {
         if (selectedMedication) {
                     try {
                         const updatedData = {
-                            id_record: selectedMedication.id_record,
+                            id_medication: selectedMedication.id_medication,
                             status: selectedMedication.status,
                             amount: selectedMedication.amount,
                             last_time: selectedMedication.last_time,
@@ -142,7 +144,7 @@ function RegistrarMedicamentos() {
                         };
                         console.log("Datos actualizados a enviar:", updatedData); 
                         await updateRegisterMedication(selectedMedication.id_medication, updatedData);
-                        alert("Medicamento actualizado con éxito.");
+                        notifySuccess("Registro de medicamento actualizado con éxito");
             
                         // Resetea la selección
                         setSelectedMedication(null);
@@ -166,7 +168,7 @@ function RegistrarMedicamentos() {
         if (selectedMedication && selectedMedication.id_record) {
                     try {
                         await deleteRegisterMedication(selectedMedication.id_record);  // Llamar al backend
-                        alert("Registro de medicamento eliminado con éxito.");
+                        notifySuccess("Registro de medicamento eliminado con éxito");
             
                         // Actualiza la lista de recomendaciones en el estado local
                         setMedications(medications.filter((rec) => rec.id_record !== selectedMedication.id_record));
@@ -433,6 +435,7 @@ function RegistrarMedicamentos() {
                 )}
             </div>
         </div>
+        <ToastContainer />
     </div>
   )
 }

@@ -5,7 +5,8 @@ import { getMedications } from "../request/request";
 import { getMedicationById } from "../request/request";
 import { updateMedication } from "../request/request";
 import { deleteMedication, getDrugTypes} from "../request/request";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../styles/Medicamentos.css";
 
 function Medicamentos() {
@@ -20,6 +21,7 @@ function Medicamentos() {
         const { name, value } = e.target;
         setNewMedication({ ...newMedication, [name]: value });
     };
+    const notifySuccess = (message) => toast.success(`${message}`);
 
     useEffect(() => {
         // Obtener los tipos de droga cuando se monta el componente
@@ -39,7 +41,7 @@ function Medicamentos() {
         e.preventDefault();
         try {
             const response = await addMedication(newMedication);
-            alert("Medicamento agregado con éxito");
+            notifySuccess("Medicamento agregado con éxito"); 
             console.log("Respuesta del servidor:", response);
             // Limpia el formulario después de agregar
             setNewMedication({
@@ -104,8 +106,7 @@ function Medicamentos() {
         if (selectedMedication) {
             try {
                 await deleteMedication(selectedMedication.id_medication);  // Llamar al backend
-                alert("Medicamento eliminado con éxito.");
-    
+                notifySuccess("Medicamento eliminado con éxito"); 
                 // Actualiza la lista de medicamentos local
                 setMedications(medications.filter((med) => med.id_medication !== selectedMedication.id_medication));
                 setSelectedMedication(null);
@@ -143,15 +144,12 @@ function Medicamentos() {
                     id_medication: selectedMedication.id_medication,
                     name: selectedMedication.name,
                     notes: selectedMedication.notes,
-                    type_of_drug: 1,
+                    type_of_drug: selectedMedication.type_of_drug,
                     contradictions: selectedMedication.contradictions,
                 };
+                notifySuccess("Medicamento actualizado con éxito"); 
                 console.log("Datos actualizados a enviar:", updatedData); 
                 await updateMedication(selectedMedication.id_medication, updatedData);
-                alert("Medicamento actualizado con éxito.");
-                
-                // Actualiza el listado de medicamentos si es necesario
-                await handleShowMedications();
     
                 // Resetea la selección
                 setSelectedMedication(null);
@@ -236,17 +234,21 @@ function Medicamentos() {
                                             setSelectedMedication({ ...selectedMedication, notes: e.target.value })
                                         }
                                     />
+                                    
                                     <label>Tipo de Droga:</label>
                                     <select
-                                        value={selectedMedication.type_of_drug}
+                                        value={selectedMedication?.type_of_drug || ""}  // Usamos el valor correcto para el select
                                         onChange={(e) =>
                                             setSelectedMedication({ ...selectedMedication, type_of_drug: e.target.value })
                                         }
                                     >
-                                        <option value="1">Pastilla</option>
-                                        <option value="2">Jeringa</option>
-                                        <option value="3">Jarabe</option>
+                                        {typeMed.map((type) => (
+                                            <option key={type.id_type_of_drug} value={type.id_type_of_drug}>
+                                                {type.type} (ID: {type.id_type_of_drug})
+                                            </option>
+                                        ))}
                                     </select>
+
                                     <label>Contraindicaciones:</label>
                                     <textarea
                                         value={selectedMedication.contradictions}
@@ -346,6 +348,7 @@ function Medicamentos() {
                 )}
             </div>
         </div>
+        <ToastContainer />
     </div>
   )
 }

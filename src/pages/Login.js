@@ -73,8 +73,6 @@ function Login() {
           </Link>
         </form>
       </div>
-
-      {/* Mueve el ToastContainer aquí, para que esté disponible globalmente */}
       <ToastContainer />
     </div>
   );

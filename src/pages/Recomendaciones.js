@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import "../styles/Recomendaciones.css";
 import { addRecommendation, getMedications, getRecommendations, getRecommendationById, updateRecommendation, deleteRecommendation } from "../request/request"; // Importar funciones del backend
-
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 function Recomendaciones() {
@@ -16,7 +16,7 @@ function Recomendaciones() {
         setShowForm(!showForm); // Alternar la visibilidad del formulario
     };
 
-
+    const notifySuccess = (message) => toast.success(`${message}`);
     // Cargar medicamentos al montar el componente
     useEffect(() => {
         async function fetchMedications() {
@@ -70,10 +70,9 @@ function Recomendaciones() {
         if (selectedRecommendation && selectedRecommendation.id_recommendation) {
             try {
                 await deleteRecommendation(selectedRecommendation.id_recommendation);  // Llamar al backend
-                alert("Recomendación eliminada con éxito.");
+                notifySuccess("Recomendación eliminada con éxito");
     
                 // Actualiza la lista de recomendaciones en el estado local
-                setRecommendations(recommendations.filter((rec) => rec.id_recommendation !== selectedRecommendation.id_recommendation));
                 setSelectedRecommendation(null);
                 setSearchID("");
             } catch (error) {
@@ -112,7 +111,7 @@ function Recomendaciones() {
 
             try {
                 await addRecommendation(recommen);
-                alert("Recomendación guardada con éxito");
+                notifySuccess("Recomendación guardada con éxito");
                 // Limpiar el formulario
                 setSelectedMedicationID('');
                 setNote('');
@@ -169,10 +168,7 @@ function Recomendaciones() {
                         };
                         console.log("Datos actualizados a enviar:", updatedData); 
                         await updateRecommendation(selectedRecommendation.id_recommendation, updatedData);
-                        alert("Medicamento actualizado con éxito.");
-                        
-                        // Actualiza el listado de medicamentos si es necesario
-                        await handleShowRecommendations();
+                        notifySuccess("Recomendación actualizada con éxito");
             
                         // Resetea la selección
                         setSelectedRecommendation(null);
@@ -367,7 +363,7 @@ function Recomendaciones() {
                     )}
                 </div>
             </div>
-            
+            <ToastContainer />
         </div>
     )
 }

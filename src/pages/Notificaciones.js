@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import "../styles/Notificaciones.css";
 import { getRegisterMedications, getNewAlert, sendEmailNotification } from "../request/request";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Notificaciones() {
   // --- Estados ---
@@ -15,6 +16,7 @@ function Notificaciones() {
   const [selectedID, setSelectedID] = useState('');
   const [typeAlert, setTypeAlert] = useState([]);
   const [selectedMedication, setSelectedMedication] = useState(null);
+  const notifySuccess = (message) => toast.success(`${message}`);
 
   
   const [newAlert, setNewAlert] = useState({
@@ -88,7 +90,7 @@ const handleFormSubmit = async (e) => {
       try {
           // Enviar la notificación al backend
           await sendEmailNotification(notificationData);
-          alert("Notificación enviada por correo con éxito.");
+          notifySuccess("Notificación programada con éxito");
           
           // Agregarla también localmente a la lista de notificaciones
           setNotifications((prev) => [...prev, { ...newNotification, dateTime }]);
@@ -199,6 +201,7 @@ const handleFormSubmit = async (e) => {
           )}
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

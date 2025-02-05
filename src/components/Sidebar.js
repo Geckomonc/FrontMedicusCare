@@ -29,7 +29,7 @@ function Sidebar() {
           <Link to="/recomendations">Recomendaciones</Link>
           <Link to="/registrar-medicamentos">Registrar medicamentos</Link>
           <Link to="/notificaciones">Notificaciones</Link>
-          <Link to="/usuarios">Usuarios</Link>
+          {/*<Link to="/usuarios">Usuarios</Link>*/}
         </nav>
       </div>
       <button className="logout" onClick={handleLogout}>Cerrar sesión</button>

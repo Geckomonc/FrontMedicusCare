@@ -119,7 +119,6 @@ export async function updateMedication(id, updatedMedication) {
             },
         };
         updatedMedication.id_user = token
-        updatedMedication.type_of_drug = 1
         updateMedication.id_medication = id
         // Enviar la solicitud PUT con los datos actualizados
         const response = await api.put(`medications/edit`, updatedMedication, config);
@@ -296,15 +295,16 @@ export async function addRegisterMedication(medication) {
 export async function getRegisterMedications() {
     try {
         const patient = localStorage.getItem("patient");// Obtener el token del almacenamiento local
-
         // Configuración de headers con el token
+        console.log(localStorage.getItem("id"));
+        console.log(localStorage.getItem("patient"));
         const config = {
             headers: {
                 Authorization: `Bearer ${patient}`,
             },
         };
-
         // Hacer la solicitud GET para obtener recomendaciones
+        console.log(patient);
         const response = await api.get(`/medications/records/${patient}`, config);
         return response.data; // Suponiendo que devuelve un array de recomendaciones
     } catch (error) {

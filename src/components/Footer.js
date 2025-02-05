@@ -8,7 +8,7 @@ function Footer() {
       <div className="socialMedia">
         <FaInstagram /> <FaTwitterSquare  /> <FaFacebookSquare /> <FaLinkedin />
       </div>
-      <p> &copy; 2024</p>
+      <p> &copy; 2025</p>
     </div>
   );
 }

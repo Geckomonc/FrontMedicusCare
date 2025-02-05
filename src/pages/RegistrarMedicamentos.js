@@ -134,7 +134,7 @@ function RegistrarMedicamentos() {
         if (selectedMedication) {
                     try {
                         const updatedData = {
-                            id_medication: selectedMedication.id_medication,
+                            id_record: selectedMedication.id_record,
                             status: selectedMedication.status,
                             amount: selectedMedication.amount,
                             last_time: selectedMedication.last_time,

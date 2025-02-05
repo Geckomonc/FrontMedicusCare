@@ -67,12 +67,17 @@
   }
   
   .register-button[type="submit"] {
+    background-color: #007ba7; /* Verde */
+    color: white;
+    margin-top: 1rem;
+  }
+  .login-button[type="submit"] {
     background-color: #28a745; /* Verde */
     color: white;
     margin-top: 1rem;
   }
   
-  /*button.crear-cuenta {
+  /*button.register-button {
     background-color: #17a2b8;
     color: white;
     margin-top: 0.5rem;
